@@ -1,1 +1,0 @@
-rootProject.name = "GBC_EventBooking-GroupNo9"
