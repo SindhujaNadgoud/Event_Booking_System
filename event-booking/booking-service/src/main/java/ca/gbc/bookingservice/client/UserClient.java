@@ -1,4 +1,4 @@
-package main.java.ca.gbc.bookingservice.client;
+package ca.gbc.bookingservice.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

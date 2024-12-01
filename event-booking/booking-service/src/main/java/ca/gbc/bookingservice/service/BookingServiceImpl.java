@@ -1,9 +1,9 @@
-package main.java.ca.gbc.bookingservice.service;
+package ca.gbc.bookingservice.service;
 
-import main.java.ca.gbc.bookingservice.dto.BookingRequest;
-import main.java.ca.gbc.bookingservice.dto.BookingResponse;
+import ca.gbc.bookingservice.dto.BookingRequest;
+import ca.gbc.bookingservice.dto.BookingResponse;
+import ca.gbc.bookingservice.repository.BookingRepository;
 import main.java.ca.gbc.bookingservice.model.Booking;
-import main.java.ca.gbc.bookingservice.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;

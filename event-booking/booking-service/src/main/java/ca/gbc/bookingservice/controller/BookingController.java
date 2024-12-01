@@ -1,13 +1,12 @@
-package main.java.ca.gbc.bookingservice.controller;
+package ca.gbc.bookingservice.controller;
 
-import main.java.ca.gbc.bookingservice.client.RoomClient;
-import main.java.ca.gbc.bookingservice.client.UserClient;
-import main.java.ca.gbc.bookingservice.dto.BookingRequest;
-import main.java.ca.gbc.bookingservice.dto.BookingResponse;
-import main.java.ca.gbc.bookingservice.model.Booking;
-import main.java.ca.gbc.bookingservice.service.BookingService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import ca.gbc.bookingservice.client.RoomClient;
+import ca.gbc.bookingservice.client.UserClient;
+import lombok.AllArgsConstructor;
+import ca.gbc.bookingservice.dto.BookingRequest;
+import ca.gbc.bookingservice.dto.BookingResponse;
+
+import ca.gbc.bookingservice.service.BookingService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/bookings")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class BookingController {
 
     private final BookingService bookingService;
@@ -60,7 +59,7 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable("id") String id) {
-        Optional<Booking> booking = bookingService.getBookingById(id);
+        Optional<main.java.ca.gbc.bookingservice.model.Booking> booking = bookingService.getBookingById(id);
 
         if (booking.isPresent()) {
             BookingResponse bookingResponse = new BookingResponse(

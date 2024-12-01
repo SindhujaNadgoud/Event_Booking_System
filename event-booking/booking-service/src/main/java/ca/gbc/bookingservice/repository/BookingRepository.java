@@ -1,4 +1,4 @@
-package main.java.ca.gbc.bookingservice.repository;
+package ca.gbc.bookingservice.repository;
 
 import main.java.ca.gbc.bookingservice.model.Booking;
 import org.springframework.data.mongodb.repository.MongoRepository;

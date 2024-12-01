@@ -1,6 +1,6 @@
-package main.java.ca.gbc.bookingservice.service;
-import main.java.ca.gbc.bookingservice.dto.BookingRequest;
-import main.java.ca.gbc.bookingservice.dto.BookingResponse;
+package ca.gbc.bookingservice.service;
+import ca.gbc.bookingservice.dto.BookingRequest;
+import ca.gbc.bookingservice.dto.BookingResponse;
 import main.java.ca.gbc.bookingservice.model.Booking;
 
 import java.util.List;

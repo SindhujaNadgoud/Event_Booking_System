@@ -1,4 +1,4 @@
-package main.java.ca.gbc.bookingservice.dto;
+package ca.gbc.bookingservice.dto;
 
 import java.time.Instant;
 
