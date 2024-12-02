@@ -44,7 +44,7 @@ public class BookingController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/bookings/" + createdBooking.id());
-
+        //Kafka event should be produced here
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .headers(headers)

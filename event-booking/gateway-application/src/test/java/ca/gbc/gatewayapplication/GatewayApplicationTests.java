@@ -1,10 +1,10 @@
-package ca.gbc.event_booking;
+package ca.gbc.gatewayapplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EventBookingApplicationTests {
+class GatewayApplicationTests {
 
 	@Test
 	void contextLoads() {

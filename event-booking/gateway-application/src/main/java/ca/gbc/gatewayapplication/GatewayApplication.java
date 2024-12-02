@@ -1,13 +1,13 @@
-package ca.gbc.event_booking;
+package ca.gbc.gatewayapplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EventBookingApplication {
+public class GatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EventBookingApplication.class, args);
+		SpringApplication.run(GatewayApplication.class, args);
 	}
 
 }

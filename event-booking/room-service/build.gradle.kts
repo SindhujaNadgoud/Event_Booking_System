@@ -41,6 +41,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation ("io.micrometer:micrometer-registry-prometheus")
 }
 
 dependencyManagement {
