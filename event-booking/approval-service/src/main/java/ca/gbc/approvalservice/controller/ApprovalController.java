@@ -27,14 +27,24 @@ public class ApprovalController {
     // Endpoint to create a new approval
     @PostMapping
     public ResponseEntity<ApprovalResponse> createApproval(@RequestBody ApprovalRequest request) {
+        System.out.println("-------------------");
+        System.out.println(userClient.isValid(request.approvedId()));
+        try {
+            System.out.println(userClient);
+            if (!userClient.isValid(request.approvedId())) {
+                throw new RuntimeException("User is invalid");
+            }
 
-        if(!userClient.isValid(request.approvedId())) {
-            throw new RuntimeException("User is invalid");
+            if (!userClient.isUserStaff(request.approvedId())) {
+                throw new RuntimeException("Invalid user role.");
+            }
+        }
+        catch (Exception e) {
+            // Log when fallback is triggered
+           // logger.warn("Fallback triggered due to exception: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
         }
 
-        if(!userClient.isUserStaff(request.approvedId())) {
-            throw new RuntimeException("Invalid user role.");
-        }
 
         if(!eventClient.isEventValid(request.eventId())) {
             throw new RuntimeException("Invalid event id.");

@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.3.5"
+	id("org.springframework.boot") version "3.4.0"
 	id("io.spring.dependency-management") version "1.1.6"
 	id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
@@ -26,14 +26,21 @@ repositories {
 }
 
 extra["snippetsDir"] = file("build/generated-snippets")
-extra["springCloudVersion"] = "2024.0.0-RC1"
-//extra["springCloudVersion"] = "2023.0.3"
+//	extra["springCloudVersion"] = "2024.0.0-RC1"
+extra["springCloudVersion"] = "2023.0.3"
+//extra["resilience4jVersion"]="0.17.0"
 
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 	implementation ("io.micrometer:micrometer-registry-prometheus")
+	annotationProcessor("org.projectlombok:lombok")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+//	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")
+//	implementation("io.github.resilience4j:resilience4j-spring-boot2:0.17.0")
+//	implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix")
+
 //	implementation ("org.springframework.boot:spring-boot-starter-security")
 //	implementation ("org.keycloak:keycloak-spring-boot-starter:22.0.0")
 //	implementation ("org.keycloak:keycloak-admin-client:22.0.0")
