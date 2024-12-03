@@ -1,11 +1,11 @@
 {
   "type": "record",
   "name": "BookingEvent",
-  "namespace": "com.example.booking",
   "fields": [
     { "name": "bookingId", "type": "string" },
+    { "name": "roomId", "type": "string", "default": "" },
     { "name": "userId", "type": "string" },
-    { "name": "eventTime", "type": "string" },
-    { "name": "status", "type": "string" }
+    { "name": "startTime", "type": "string" ,"default": "" },
+    { "name": "endTime", "type": "string" ,"default": "" },
   ]
 }

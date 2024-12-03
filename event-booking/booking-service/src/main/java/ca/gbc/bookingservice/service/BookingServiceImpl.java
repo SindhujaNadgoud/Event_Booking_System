@@ -3,6 +3,7 @@ package ca.gbc.bookingservice.service;
 import ca.gbc.bookingservice.dto.BookingRequest;
 import ca.gbc.bookingservice.dto.BookingResponse;
 import ca.gbc.bookingservice.repository.BookingRepository;
+import lombok.AllArgsConstructor;
 import main.java.ca.gbc.bookingservice.model.Booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +18,17 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final MongoTemplate mongoTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final String bookingTopic = "booking-events";
 
+//    public BookingServiceImpl(KafkaTemplate<String, String> kafkaTemplate) {
+//        this.kafkaTemplate = kafkaTemplate;
+//    }
 
     @Override
     public BookingResponse createBooking(BookingRequest bookingRequest) {
@@ -40,6 +46,19 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(newBooking);
         log.info("Booking {} is saved", newBooking.getId());
 
+        // Create a booking event
+        String bookingEvent = String.format(
+                "{ \"bookingId\": \"%s\", \"roomId\": \"%s\", \"userId\": \"%s\", \"startTime\": \"%s\", \"endTime\": \"%s\" }",
+                newBooking.getId(),
+                newBooking.getRoomId(),
+                newBooking.getUserId(),
+                newBooking.getStartTime(),
+                newBooking.getEndTime()
+        );
+
+        // Publish to Kafka
+        kafkaTemplate.send(bookingTopic, newBooking.getId(), bookingEvent);
+        System.out.println("Published booking event to Kafka: " + bookingEvent);
         // Return a response containing booking details
         return new BookingResponse(
                 newBooking.getId(),
