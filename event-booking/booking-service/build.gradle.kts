@@ -47,6 +47,7 @@ dependencies {
     testImplementation("org.testcontainers:mongodb")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation ("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 //    implementation ("io.github.resilience4j:resilience4j-spring-boot:2.0.2")
 //    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker:1.7.0")
   // Same as your app dependency

@@ -38,6 +38,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
 
 //	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")

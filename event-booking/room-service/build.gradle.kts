@@ -42,6 +42,7 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation ("io.micrometer:micrometer-registry-prometheus")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 }
 
 dependencyManagement {
