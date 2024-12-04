@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.5"
+    id("org.springframework.boot") version "3.0.0"
     id("io.spring.dependency-management") version "1.1.6"
 }
 
@@ -47,6 +47,12 @@ dependencies {
     testImplementation("org.testcontainers:mongodb")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation ("io.micrometer:micrometer-registry-prometheus")
+//    implementation ("io.github.resilience4j:resilience4j-spring-boot:2.0.2")
+//    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker:1.7.0")
+  // Same as your app dependency
+
+
+
 }
 
 dependencyManagement {
