@@ -5,6 +5,7 @@ import ca.gbc.approvalservice.client.UserClient;
 import ca.gbc.approvalservice.dto.ApprovalRequest;
 import ca.gbc.approvalservice.dto.ApprovalResponse;
 import ca.gbc.approvalservice.service.ApprovalService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,11 @@ public class ApprovalController {
     private final UserClient userClient;
     private final EventClient eventClient;
 
-    // Endpoint to create a new approval
+    @Operation(
+            summary = "Endpoint to create a new approval",
+            description = "Endpoint to create a new approval "
+    )
+
     @PostMapping
     public ResponseEntity<ApprovalResponse> createApproval(@RequestBody ApprovalRequest request) {
         System.out.println("-------------------");
@@ -55,7 +60,12 @@ public class ApprovalController {
         return new ResponseEntity<>(approvalResponse, HttpStatus.CREATED);
     }
 
-    // Endpoint to get an approval by ID
+
+
+    @Operation(
+            summary = "Endpoint to get approval by ID",
+            description = "Endpoint to get approval by ID"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ApprovalResponse> getApprovalById(@PathVariable String id) {
         Optional<ApprovalResponse> approvalResponse = approvalService.getApprovalById(id);
@@ -64,14 +74,20 @@ public class ApprovalController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Endpoint to get all approvals
+    @Operation(
+            summary = "Endpoint to get all approvals",
+            description = "Endpoint to get all approvals"
+    )
     @GetMapping
     public ResponseEntity<List<ApprovalResponse>> getAllApprovals() {
         List<ApprovalResponse> approvals = approvalService.getAllApprovals();
         return new ResponseEntity<>(approvals, HttpStatus.OK);
     }
 
-    // Endpoint to update an approval
+    @Operation(
+            summary = "Endpoint to get update an  approval",
+            description = "Endpoint to update an approval"
+    )
     @PutMapping("/{id}")
     public ResponseEntity<ApprovalResponse> updateApproval(
             @PathVariable String id,
@@ -82,7 +98,10 @@ public class ApprovalController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Endpoint to delete an approval by ID
+    @Operation(
+            summary = "Endpoint to get delete an approval",
+            description = "Endpoint to delete an approval"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteApproval(@PathVariable String id) {
         approvalService.deleteApproval(id);

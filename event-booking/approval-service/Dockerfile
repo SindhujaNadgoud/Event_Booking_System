@@ -1,22 +1,14 @@
-# build stage
-FROM gradle:8-jdk22-alpine AS builder
+# Use a base image with Java runtime
+FROM openjdk:17-jdk-slim
 
-COPY --chown=gradle .. /home/gradle/src
+# Set the working directory
+WORKDIR /app
 
-WORKDIR /home/gradle/src
+# Copy the Spring Boot jar file built with Gradle into the container
+COPY build/libs/your-application.jar application.jar
 
-RUN gradle build -x test
+# Expose the port that your application runs on
+EXPOSE 8088
 
-#package stage
-FROM openjdk:22-jdk
-
-RUN mkdir /app
-
-COPY --from=builder /home/gradle/src/build/libs/*.jar /app/approval-service.jar
-
-ENV MONGO_DB_USERNAME=admin \
-    MONGO_DB_PWD=password
-
-EXPOSE 8091
-
-ENTRYPOINT ["java","-jar", "/app/approval-service.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "application.jar"]

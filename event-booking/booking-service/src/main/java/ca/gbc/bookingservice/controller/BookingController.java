@@ -2,6 +2,7 @@ package ca.gbc.bookingservice.controller;
 
 import ca.gbc.bookingservice.client.RoomClient;
 import ca.gbc.bookingservice.client.UserClient;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import ca.gbc.bookingservice.dto.BookingRequest;
 import ca.gbc.bookingservice.dto.BookingResponse;
@@ -25,7 +26,10 @@ public class BookingController {
     private final RoomClient roomClient;
     private final UserClient userClient;
 
-    // Create a new booking
+    @Operation(
+            summary = "Endpoint to create a booking",
+            description = "Endpoint to create a booking"
+    )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<BookingResponse> createBooking(@RequestBody BookingRequest bookingRequest) {
@@ -51,12 +55,22 @@ public class BookingController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(createdBooking);
     }
+
+    @Operation(
+            summary = "Endpoint to get all bookings",
+            description = "Endpoint to get all bookings"
+    )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BookingResponse> getAllBookings() {
         return bookingService.getAllBookings();
     }
 
+
+    @Operation(
+            summary = "Endpoint to get a booking by ID",
+            description = "Endpoint to get a booking by ID"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable("id") String id) {
         Optional<main.java.ca.gbc.bookingservice.model.Booking> booking = bookingService.getBookingById(id);
@@ -75,6 +89,10 @@ public class BookingController {
         }
     }
 
+    @Operation(
+            summary = "Endpoint to update a booking by ID",
+            description = "Endpoint to update a booking by ID"
+    )
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBooking(@PathVariable("id") String id,
                                            @RequestBody BookingRequest bookingRequest) {
@@ -88,6 +106,12 @@ public class BookingController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @Operation(
+            summary = "Endpoint to delete a booking by ID",
+            description = "Endpoint to delete a booking by ID"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable("id") String id) {
         bookingService.deleteBooking(id);

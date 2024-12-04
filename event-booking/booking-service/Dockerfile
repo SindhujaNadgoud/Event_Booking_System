@@ -16,8 +16,8 @@ RUN mkdir /app
 
 COPY --from=builder /home/gradle/src/build/libs/*.jar /app/booking-service.jar
 
-ENV MONGO_DB_USERNAME=admin \
-    MONGO_DB_PWD=password
+#ENV MONGO_DB_USERNAME=admin \
+#    MONGO_DB_PWD=password
 
 EXPOSE 8090
 

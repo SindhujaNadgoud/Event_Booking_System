@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,10 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(
+            summary = "Endpoint to create an user",
+            description = "Endpoint to create an user"
+    )
     // Create a new user
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -27,6 +32,11 @@ public class UserController {
         User createdUser = userService.saveUser(user);
         return ResponseEntity.ok(createdUser);
     }
+
+    @Operation(
+            summary = "Endpoint to get an user by ID",
+            description = "Endpoint to get an user by ID"
+    )
 
     // Get a user by ID
     @GetMapping("/{id}")
@@ -36,7 +46,10 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Get a user by username
+    @Operation(
+            summary = "Endpoint to get an user by username",
+            description = "Endpoint to get an user by username"
+    )
     @GetMapping("/username/{username}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
@@ -44,26 +57,40 @@ public class UserController {
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    // Get a user by email
+    @Operation(
+            summary = "Endpoint to get an user by email",
+            description = "Endpoint to get an user by email"
+    )
     @GetMapping("/email/{userEmail}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String userEmail) {
         User user = userService.findUserByUserEmail(userEmail);
         return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
     }
 
-    // Get all users
+    @Operation(
+            summary = "Endpoint to get all users",
+            description = "Endpoint to get all users"
+    )
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    // Delete a user by ID
+    @Operation(
+            summary = "Endpoint to delete user by ID",
+            description = "Endpoint to delete user by ID"
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Endpoint to check user validity ",
+            description = "Endpoint to check user validity"
+    )
 
     @GetMapping("/isValid")
     @ResponseStatus(HttpStatus.OK)
@@ -72,6 +99,10 @@ public class UserController {
         return new ResponseEntity<>(userOp.isPresent(), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Endpoint to check if user is staff",
+            description = "Endpoint to check  if user is staff"
+    )
     @GetMapping("/isUserStaff")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> isUserStaff(@RequestParam String userId) {
