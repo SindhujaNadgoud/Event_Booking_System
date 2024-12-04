@@ -1,32 +1,23 @@
-# Build stage
+
+# build stage
 FROM gradle:8-jdk22-alpine AS builder
 
-# Copy source files into the container
-COPY --chown=gradle . /home/gradle/src
+COPY --chown=gradle .. /home/gradle/src
 
-# Set working directory
 WORKDIR /home/gradle/src
 
-# Build the project without running tests
 RUN gradle build -x test
+# Use a base image with Java runtime
+FROM openjdk:17-jdk-slim
 
-# Package stage
-FROM openjdk:22-jdk
+# Set the working directory
+WORKDIR /app
 
-# Create an application directory
-RUN mkdir /app
+# Copy the Spring Boot jar file built with Gradle into the container
+COPY build/libs/room-service-0.0.1-SNAPSHOT.jar application.jar
 
-# Copy the built JAR from the builder stage
-COPY --from=builder /home/gradle/src/build/libs/*.jar /app/room-service.jar
+# Expose the port that your application runs on
+EXPOSE 8083
 
-# Set environment variables for PostgreSQL
-ENV POSTGRES_DB=room-service \
-#    POSTGRES_USER=admin \
-#    POSTGRES_PASSWORD=password \
-    POSTGRES_PORT=5432
-
-# Expose the application port
-EXPOSE 8093
-
-# Run the application
-ENTRYPOINT ["java", "-jar", "/app/room-service.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "application.jar"]

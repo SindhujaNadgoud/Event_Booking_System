@@ -9,16 +9,17 @@ WORKDIR /home/gradle/src
 RUN gradle build -x test
 
 
-#package stage
-FROM openjdk:22-jdk
+# Use a base image with Java runtime
+FROM openjdk:17-jdk-slim
 
-RUN mkdir /app
+# Set the working directory
+WORKDIR /app
 
-COPY --from=builder /home/gradle/src/build/libs/*.jar /app/booking-service.jar
+# Copy the Spring Boot jar file built with Gradle into the container
+COPY build/libs/booking-service-0.0.1-SNAPSHOT.jar application.jar
 
-#ENV MONGO_DB_USERNAME=admin \
-#    MONGO_DB_PWD=password
+# Expose the port that your application runs on
+EXPOSE 8087
 
-EXPOSE 8090
-
-ENTRYPOINT ["java","-jar", "/app/booking-service.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "application.jar"]
