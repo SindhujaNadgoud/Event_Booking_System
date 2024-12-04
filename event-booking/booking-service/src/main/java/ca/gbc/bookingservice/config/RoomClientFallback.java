@@ -6,21 +6,22 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RoomClientFallback implements FallbackFactory<RoomClient> {
-//
-//    @Override
-//    public boolean isAvailable(String roomId) {
-//        // Return a default response when the service is unavailable
-//        return false; // Indicate the room is unavailable by default
-//    }
-//
-//    @Override
-//    public void updateAvailability(String roomId, Boolean availability) {
-//        // Provide a no-op or log the failure
-//        System.out.println("Fallback: Unable to update room availability for roomId " + roomId);
-//    }
+
+
 
     @Override
     public RoomClient create(Throwable cause) {
-        return null;
+        return new RoomClient() {
+            @Override
+            public boolean isAvailable(String roomId) {
+                System.out.println("Fallback: Room Client unavailable" + roomId);
+                return false;
+            }
+
+            @Override
+            public void updateAvailability(String roomId, Boolean availability) {
+                System.out.println("Fallback: Unable to update room availability for roomId " + roomId);
+            }
+        };
     }
 }

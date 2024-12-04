@@ -37,14 +37,12 @@ dependencies {
 	implementation ("io.micrometer:micrometer-registry-prometheus")
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-//	implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
-
-
-//	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")
+//	implementation ("org.keycloak:keycloak-spring-boot-starter:21.1.0")
+	//	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")
 //	implementation("io.github.resilience4j:resilience4j-spring-boot2:0.17.0")
 //	implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix")
-
+//	implementation ("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 //	implementation ("org.springframework.boot:spring-boot-starter-security")
 //	implementation ("org.keycloak:keycloak-spring-boot-starter:22.0.0")
 //	implementation ("org.keycloak:keycloak-admin-client:22.0.0")

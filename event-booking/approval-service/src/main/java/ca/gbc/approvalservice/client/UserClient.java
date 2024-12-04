@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "user-client", url = "${user.service.url}/api/users" , fallbackFactory = UserClientFallbackFactory.class)
+@FeignClient(value = "user-client", url = "${user.service.url}/api/users" , fallbackFactory = UserCllientFallback.class)
 public interface UserClient {
     @RequestMapping(method = RequestMethod.GET, value="/isValid")
     boolean isValid(@RequestParam("userId") String userId);

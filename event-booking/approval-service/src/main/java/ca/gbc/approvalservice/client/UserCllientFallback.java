@@ -1,12 +1,12 @@
 package ca.gbc.approvalservice.client;
 
-
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+
 @Component
-class UserClientFallbackFactory implements FallbackFactory<UserClient> {
+class UserCllientFallback implements FallbackFactory<UserClient> {
     @Override
     public UserClient create(Throwable cause) {
         return new UserClient() {
