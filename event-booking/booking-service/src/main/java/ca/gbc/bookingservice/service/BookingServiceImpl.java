@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import main.java.ca.gbc.bookingservice.model.Booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -25,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
     private final MongoTemplate mongoTemplate;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final String bookingTopic = "booking-events";
+    private final Logger LOG =  LoggerFactory.getLogger(BookingServiceImpl.class);
 
 //    public BookingServiceImpl(KafkaTemplate<String, String> kafkaTemplate) {
 //        this.kafkaTemplate = kafkaTemplate;
@@ -32,7 +35,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse createBooking(BookingRequest bookingRequest) {
-        log.debug("Creating a new booking for room ID: {}", bookingRequest.roomId());
+        LOG.debug("Creating a new booking for room ID: {}", bookingRequest.roomId());
 
         // Rename 'booking' to 'newBooking' to avoid conflict
         Booking newBooking = Booking.builder()
@@ -44,7 +47,7 @@ public class BookingServiceImpl implements BookingService {
 
         // Persist the booking to the MongoDB database
         bookingRepository.save(newBooking);
-        log.info("Booking {} is saved", newBooking.getId());
+        LOG.info("Booking {} is saved", newBooking.getId());
 
         // Create a booking event
         String bookingEvent = String.format(
@@ -71,24 +74,24 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Optional<Booking> getBookingById(String id) {
-        log.debug("Retrieving booking with id: {}", id);
+        LOG.debug("Retrieving booking with id: {}", id);
 
         // Use MongoTemplate to find the booking by ID
         Query query = new Query(Criteria.where("id").is(id));
         Booking foundBooking = mongoTemplate.findOne(query, Booking.class);
 
         if (foundBooking != null) {
-            log.info("Booking {} found", id);
+            LOG.info("Booking {} found", id);
             return Optional.of(foundBooking);
         } else {
-            log.warn("Booking with id {} not found", id);
+            LOG.warn("Booking with id {} not found", id);
             return Optional.empty();
         }
     }
 
     @Override
     public List<BookingResponse> getAllBookings() {
-        log.debug("Returning a list of all bookings");
+        LOG.debug("Returning a list of all bookings");
 
         // Retrieve all bookings using the repository
         List<Booking> bookings = bookingRepository.findAll();
@@ -110,7 +113,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public String updateBooking(String id, BookingRequest bookingRequest) {
-        log.debug("Updating booking with id {}", id);
+        LOG.debug("Updating booking with id {}", id);
 
         // Use MongoTemplate to find the booking by ID
         Query query = new Query(Criteria.where("id").is(id));
@@ -125,17 +128,17 @@ public class BookingServiceImpl implements BookingService {
 
             // Save the updated booking
             bookingRepository.save(foundBooking);
-            log.info("Booking {} updated", id);
+            LOG.info("Booking {} updated", id);
             return foundBooking.getId();
         }
 
-        log.warn("Booking with id {} not found", id);
+        LOG.info("Booking with id {} not found", id);
         return null;
     }
 
     @Override
     public void deleteBooking(String id) {
-        log.debug("Deleting booking with id {}", id);
+        LOG.debug("Deleting booking with id {}", id);
 
         // Use MongoTemplate to find the booking by ID
         Query query = new Query(Criteria.where("id").is(id));
@@ -144,9 +147,9 @@ public class BookingServiceImpl implements BookingService {
         if (foundBooking != null) {
             // Delete the booking from the repository
             bookingRepository.delete(foundBooking);
-            log.info("Booking {} deleted", id);
+            LOG.info("Booking {} deleted", id);
         } else {
-            log.warn("Booking with id {} not found", id);
+            LOG.warn("Booking with id {} not found", id);
         }
     }
 }

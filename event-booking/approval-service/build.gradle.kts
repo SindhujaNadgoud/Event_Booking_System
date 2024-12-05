@@ -46,6 +46,7 @@ dependencies {
     implementation ("io.micrometer:micrometer-registry-prometheus")
     implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
 //    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+    implementation ("com.github.loki4j:loki-logback-appender:1.4.1")
 
 }
 

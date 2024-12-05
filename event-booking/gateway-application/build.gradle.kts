@@ -38,6 +38,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+	implementation ("com.github.loki4j:loki-logback-appender:1.4.1")
 //	implementation ("org.keycloak:keycloak-spring-boot-starter:21.1.0")
 	//	implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")
 //	implementation("io.github.resilience4j:resilience4j-spring-boot2:0.17.0")

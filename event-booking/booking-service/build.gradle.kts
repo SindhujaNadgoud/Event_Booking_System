@@ -51,6 +51,7 @@ dependencies {
 //    implementation ("io.github.resilience4j:resilience4j-spring-boot:2.0.2")
 //    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker:1.7.0")
   // Same as your app dependency
+    implementation ("com.github.loki4j:loki-logback-appender:1.4.1")
 
 
 

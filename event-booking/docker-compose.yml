@@ -84,12 +84,15 @@ services:
     depends_on:
       - prometheus
 
+
   approval_service:
     build:
       context: ./approval-service
     container_name: approval-service
     ports:
       - "8088:8088"
+    depends_on:
+      - mongodb
 
   booking_service:
     build:
@@ -97,6 +100,8 @@ services:
     container_name: booking-service
     ports:
       - "8087:8087"
+    depends_on:
+      - mongodb
 
   event_service:
     build:
@@ -104,6 +109,8 @@ services:
     container_name: event-service
     ports:
       - "8085:8085"
+    depends_on:
+      - mongodb
 
   room_service:
     build:
@@ -111,6 +118,8 @@ services:
     container_name: room-service
     ports:
       - "8083:8083"
+    depends_on:
+      - mongodb
 
   user_service:
     build:
@@ -118,6 +127,8 @@ services:
     container_name: user-service
     ports:
       - "8084:8084"
+    depends_on:
+      - mongodb
 
   gateway_application:
     build:
@@ -125,3 +136,5 @@ services:
     container_name: gateway-application
     ports:
       - "8081:8081"
+    depends_on:
+      - mongodb
