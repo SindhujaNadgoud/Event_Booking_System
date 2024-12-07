@@ -13,36 +13,29 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:7.3.2
-    hostname: kafka
-    container_name: kafka
-    depends_on:
-      - zookeeper
+    image: confluentinc/cp-kafka:6.1.1
     ports:
       - "9092:9092"
+    depends_on:
+      - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR:
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:6.1.1
     depends_on:
       - kafka
-    environment:
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:9092
-      SCHEMA_REGISTRY_LISTENER_HTTP_PORT: 8081
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
     ports:
       - "8082:8082"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:29092'
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8082
 
   mongo_db:
     image: mongo:5.0.2
@@ -64,15 +57,20 @@ services:
       - db:/var/lib/postgres
 
   approval-service:
+    container_name: approval-service
     depends_on:
       - mongo_db
+      - user-service
+      - room-service
     build: ./approval-service
     restart: on-failure
     ports:
       - "8088:8088"
     environment:
       SPRING_APPLICATION_JSON: '{
-          "spring.data.mongodb.uri" : "mongodb://mongo_db:27017/approvalservice"
+          "spring.data.mongodb.uri":"mongodb://mongo_db:27017/approvalservice",
+          "user.service.url":"http://user-service:8084",
+          "event.service.url":"http://event-service:8085"
         }'
     volumes:
       - .m2:/root/.m2
@@ -83,6 +81,8 @@ services:
     depends_on:
       - mongo_db
       - kafka
+      - user-service
+      - room-service
     build:
       context: ./booking-service
     container_name: booking-service
@@ -92,7 +92,10 @@ services:
     environment:
       SPRING_APPLICATION_JSON: '{
           "spring.data.mongodb.uri" : "mongodb://mongo_db:27017/bookingservice",
-                                "spring.kafka.bootstrap-servers": "kafka:9092"
+                                "spring.kafka.bootstrap-servers": "kafka:9092",
+                                          "user.service.url":"http://user-service:8084",
+          "room.service.url":"http://event-service:8083"
+                                
         }'
 #    volumes:
 #      - .m2:/root/.m2
@@ -101,6 +104,7 @@ services:
 
 
   event-service:
+    container_name: event-service
     depends_on:
       - mongo_db
       - kafka
@@ -110,16 +114,17 @@ services:
       - "8085:8085"
     environment:
       SPRING_APPLICATION_JSON: '{
-          "spring.data.mongodb.uri" : "mongodb://mongo_db:27017/eventservice",
-          "spring.kafka.bootstrap-servers": "kafka:9092"
-        }'
+          "spring.data.mongodb.uri" : "mongodb://mongo_db:27017/eventservice"
 
+        }'
+    #       .   "spring.kafka.bootstrap-servers": "kafka:9092"
     volumes:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
 
   user-service:
+    container_name: user-service
     depends_on:
       - postgresdb
     build: ./user-service
@@ -141,6 +146,7 @@ services:
     tty: true
 
   room-service:
+    container_name: room-service
     depends_on:
       - postgresdb
     build: ./room-service
@@ -162,6 +168,7 @@ services:
     tty: true
 
   gateway-service:
+    container_name: gateway-service
     build: ./gateway-application
     restart: on-failure
     depends_on:
@@ -174,68 +181,31 @@ services:
       - "8081:8081"
     stdin_open: true
     tty: true
-    environment:
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_URI: http://user-service:8084
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_ID: user-service
-      SPRING_CLOUD_GATEWAY_ROUTES[0]_PREDICATES[0]: Path= /api/users/**
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_URI: http://approval-service:8088
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_ID: approval-service
-      SPRING_CLOUD_GATEWAY_ROUTES[1]_PREDICATES[1]: Path= /api/approvals/**
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_URI: http://room-service:8083
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_ID: room-service
-      SPRING_CLOUD_GATEWAY_ROUTES[2]_PREDICATES[2]: Path= /api/room/**
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_URI: http://event-service:8085
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_ID: event-service
-      SPRING_CLOUD_GATEWAY_ROUTES[3]_PREDICATES[3]: Path= /api/events/**
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_URI: http://booking-service:8087
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_ID: booking-service
-      SPRING_CLOUD_GATEWAY_ROUTES[4]_PREDICATES[4]: Path= /api/bookings/**
 
 
-
-
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    #    volumes:
-    #      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    #      - prometheus_data:/prometheus
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
     ports:
-      - "9090:9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
-      - "--web.console.templates=/usr/share/prometheus/consoles"
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: admin
-    ports:
-      - "3001:3000"
-    depends_on:
-      - prometheus
-
-
-#  loki:
-#    image: grafana/loki:latest
-#    ports:
-#      - "3100:3100"
-#    command: -config.file=/etc/loki/local-config.yaml
-#    networks:
-#      - loki
-#
-#  promtail:
-#    image: grafana/promtail:latest
+      - 3100:3100
+#    command: -config.file=/etc/loki/loki.yaml
 #    volumes:
-#      - /var/log:/var/log
-#    command: -config.file=/etc/promtail/config.yml
+#      - ./config/loki/loki.yaml:/etc/loki/loki.yaml
 #    networks:
-#      - loki
+#      - app
 
+  promtail:
+    image:  grafana/promtail:3.0.0
+    container_name: promtail
+#    volumes:
+#      - ./config/promtail/promtail.yaml:/etc/promtail/docker-config.yaml
+#      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    command: -config.file=/etc/promtail/docker-config.yaml
+    depends_on:
+      - loki
+#    networks:
+#      - app
 
 volumes:
   db:
-
