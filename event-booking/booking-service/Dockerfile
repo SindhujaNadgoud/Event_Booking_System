@@ -15,6 +15,7 @@ FROM openjdk:17-jdk-slim
 # Set the working directory
 WORKDIR /app
 
+
 # Copy the Spring Boot jar file built with Gradle into the container
 COPY build/libs/booking-service-0.0.1-SNAPSHOT.jar application.jar
 
